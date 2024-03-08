@@ -42,11 +42,25 @@ const App = () => {
 
   const getTypeBackgroundColor = (types) => {
     if (types && types.length === 1) {
-      return typeColors[types[0].type.name] || "white";
+      return typeColors[types[0]] || "white";
     } else if (types && types.length === 2) {
-      return `linear-gradient(to right, ${
-        typeColors[types[0].type.name] || "white"
-      }, ${typeColors[types[1].type.name] || "white"})`;
+      return `linear-gradient(to right, ${typeColors[types[0]] || "white"}, ${
+        typeColors[types[1]] || "white"
+      })`;
+    } else {
+      return "white";
+    }
+  };
+
+  const getPokemonImage = (pokemon) => {
+    const pokemonId = pokemon.url.split("/")[6];
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+  };
+
+  const getPokemonBackgroundColor = (pokemon) => {
+    if (pokemon && pokemon.types) {
+      const types = pokemon.types.map((t) => t.type.name);
+      return getTypeBackgroundColor(types);
     } else {
       return "white";
     }
@@ -73,13 +87,11 @@ const App = () => {
               <div
                 key={index}
                 className="flex flex-col items-center rounded-md"
-                style={{ background: getTypeBackgroundColor(pokemon.types) }}
+                style={{ backgroundColor: getPokemonBackgroundColor(pokemon) }}
               >
                 <div className={`text-2xl font-bold`}>{pokemon.name}</div>
                 <img
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                    pokemon.url.split("/")[6]
-                  }.png`}
+                  src={getPokemonImage(pokemon)}
                   alt={pokemon.name}
                   className="mt-2"
                 />
